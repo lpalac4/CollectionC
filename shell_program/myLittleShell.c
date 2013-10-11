@@ -80,7 +80,7 @@ void redirection(char *part) {
 		int inlen = strcspn(in," <>|&;");
 		strncpy(infile, in, inlen);
 		infile[inlen] = 0;
-		int infd=open(infile, O_RDONLY);
+		int infd = open(infile, O_RDONLY);
 		dup2(infd, 0);
 	}
 	
@@ -153,7 +153,7 @@ int basicCommands(char *line) {
 
 /**
 * 
-* This shell program was written to support a script using the readline developer files
+* Small shell program should be compiled with the -lreadline developer files 
 */
 int main(int argc, char ** argv) {
 	
@@ -171,23 +171,9 @@ int main(int argc, char ** argv) {
 		if(!line) {
 			return 0;
 		}
-		if(line[0] == '#') continue;
-
-		char *src = line;
-		char *out = buf;
-		while(*src && strchr(src,'$') > 0) {
-			int offset = strchr(src,'$') - src;
-			strncpy(out,src,offset);
-			src += offset;
-			out += offset;			
-			//Replace any $1,$2,$X with argv[2],argv[3] ....			
-			char *arg = argv[*(src + 1) - 48 + 1];
-			strcpy(out,arg);
-			src += 2;
-			out += strlen(arg);
-		}
-		strcpy(out,src);
-
+		
+		strcpy(buf,line);
+		
 		if(!basicCommands(buf) && strlen(buf) > 0) {
 			int status_loc;						
 			int pid = fork();
